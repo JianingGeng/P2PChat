@@ -22,9 +22,9 @@ Session = sessionmaker(bind=engine)
 class User(Base):
     __tablename__ = "users"
     username = Column(String, primary_key=True)
-    ip_address = Column(String)  # 添加这行来存储用户的IP地址
+    ip_address = Column(String) 
     password_hash = Column(String)
-    is_online = Column(Boolean, default=False)  # 添加这个字段来追踪用户是否在线
+    is_online = Column(Boolean, default=False)  
     port = Column(Integer)
 
     def set_password(self, password):
@@ -37,7 +37,7 @@ class User(Base):
 
 
 def set_user_online(username, online=True):
-    """设置用户的在线状态"""
+    """set user online status"""
     session = scoped_session(Session)()
     user = session.query(User).filter_by(username=username).first()
     if user:
@@ -47,7 +47,7 @@ def set_user_online(username, online=True):
 
 
 def get_online_users():
-    """获取当前在线的所有用户"""
+    """get all online user information"""
     session = scoped_session(Session)()
     online_users = session.query(User).filter_by(is_online=True).all()
     session.remove()
@@ -61,11 +61,11 @@ class Message(Base):
     recipient_username = Column(String, ForeignKey("users.username"))
     content = Column(String)
     timestamp = Column(DateTime, default=datetime.utcnow)
-    is_read = Column(Boolean, default=False)  # 添加这个字段来追踪消息是否已读
+    is_read = Column(Boolean, default=False)
 
 
 def store_message(sender, recipient, content):
-    """存储消息到数据库"""
+    """store message to database"""
     session = Session()
     message = Message(
         sender_username=sender, recipient_username=recipient, content=content
@@ -76,7 +76,7 @@ def store_message(sender, recipient, content):
 
 
 def get_unread_messages(username):
-    """从数据库中检索未读消息"""
+    """get unred information from database"""
     session = scoped_session(Session)()
     unread_messages = (
         session.query(Message)
@@ -88,7 +88,7 @@ def get_unread_messages(username):
 
 
 def mark_message_as_read(message_id):
-    """将消息标记为已读"""
+    """mark message as read"""
     session = scoped_session(Session)()
     message = session.query(Message).filter_by(id=message_id).first()
     if message:
@@ -97,9 +97,8 @@ def mark_message_as_read(message_id):
     session.remove()
 
 
-# 在数据库中创建表
-# 这一行代码是在所有模型类定义之后添加的
+
 Base.metadata.create_all(engine)
 
-# 创建会话工厂
+
 Session = sessionmaker(bind=engine)
