@@ -6,10 +6,10 @@ import random
 
 
 def get_ip_address():
-    """获取本机的IP地址。"""
+    """get the ip address"""
     s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     try:
-        # 使用Google的公共DNS服务器地址来寻找最合适的网络接口
+    
         s.connect(("8.8.8.8", 80))
         IP = s.getsockname()[0]
     except Exception:
@@ -20,15 +20,14 @@ def get_ip_address():
 
 
 def assign_port():
-    # 这只是一个示例。在实际应用中，您应确保端口号的唯一性，
-    # 并检查它是否未被当前系统上的其他应用占用。
+   
     return random.randint(49152, 65535)
 
 
 def register_user(username, password, ip_address):
     """Register a user and save their IP address and an assigned port."""
     hashed_password = bcrypt.hashpw(password.encode("utf-8"), bcrypt.gensalt())
-    assigned_port = assign_port()  # 分配一个端口号
+    assigned_port = assign_port() 
     user = User(
         username=username,
         ip_address=ip_address,
@@ -59,7 +58,7 @@ def login_user(username, password):
     session = Session()
     user = session.query(User).filter_by(username=username).first()
     if user and bcrypt.checkpw(password.encode("utf-8"), user.password_hash):
-        user.is_online = True  # 设置用户为在线
+        user.is_online = True  
         session.commit()
         session.close()
         return True
